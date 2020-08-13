@@ -15,6 +15,11 @@ func Play(url string, callback func(err error)) {
 	r, w := io.Pipe()
 	defer w.Close()
 
+	if _, err := exec.LookPath("ffmpeg"); err != nil {
+		callback(err)
+		return
+	}
+
 	cmd := exec.Command("ffmpeg", "-i", url, "-f", "mp3", "-")
 	cmd.Stdout = w
 
